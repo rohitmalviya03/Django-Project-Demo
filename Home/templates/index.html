@@ -1,0 +1,110 @@
+
+{% extends "header.html" %}
+{% load cart %}
+{% load static %}
+
+<link rel='stylesheet' href= "{% static 'css/style.css' %}">
+  
+ {% block content %}  
+<section class="new_arrivals_area section-padding-80 clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading text-center">
+                    <h2>Popular Products</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+    </div>
+
+</section>
+<h3>{{username}}</h3>
+<div class="row">
+<div class="col-lg-2">
+    <ul class="list-group">
+        <a href="/"> <li class="list-group-item">All items</li></a>
+
+        {% for cat in category %}
+        
+       <a href="/?category={{cat.id}}"> <li class="list-group-item">{{cat.name}}</li></a>
+{% endfor %}
+    </ul>
+<h6 class="text-danger-emphasis">By Price</h6>
+<form action="/" method="POST">
+    {% csrf_token %}
+<ul class="list-group">
+    <li class="list-group-item">
+        <span id="val" class="text-bg-danger"></span>
+        <input type="range" id="myFilter" onchange="valuechange()" min=0 max=100 name="price1">
+    <li class="list-group-item">
+   <input type="submit"  value="Filter"></li>
+        
+</ul></form>
+
+<script>
+
+function valuechange(){
+val= document.getElementById("myFilter")
+document.getElementById('val').innerHTML=(val.value)*15
+
+}
+</script>
+</div>
+
+
+
+<div class="col-lg-10">
+
+   
+    <div class="row">   
+        {% for product in products %}
+  
+        <div class="col-lg-3">
+
+        <div class="card" style="width:180px; height:400px ">
+            <img  src="{{product.image.url}}" class="card-img-top" alt="...">
+             <div class="card-body">
+              <h5 class="card-title">{{product.pname}}</h5>
+              <p class="card-text">{{product.description}}</p>
+              <p class="card-text">{{product.price}}</p>
+</div>
+    <!-- for decresing qnty --><div class="card-footer">
+    {% if product|productExits:request.session.cart %}
+    {{request.session.cart}}
+              <form action="addcart" method="POST">
+                 {% csrf_token %}
+                 <input type="hidden"  name="pid" value="{{product.id}}" >
+          
+                <input type="hidden" value="-1" name="remove">
+                <input  type="submit" value="-">
+             {{product|cartprice:request.session.cart}}
+              </form>
+              <span>{{product|quantity:request.session.cart}}</span>
+              <form action="addcart" method="POST"> {% csrf_token %}
+                <input type="hidden"  name="pid" value="{{product.id}}" >
+          
+             <input type="submit" value="+">
+
+              </form>
+              {% else %}  
+              <form action="addcart" method="POST">
+                {% csrf_token %}
+                <input type="hidden"  name="pid" value="{{product.id}}" >
+              <input type="submit" class="btn btn-primary" value="Add to cart">
+            </form>
+          {%endif%}</div>
+
+            
+    </div>
+    
+  </div> 
+  {% endfor %}</div>
+</div>
+</div>
+
+  {% endblock %}
+
+

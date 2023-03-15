@@ -1,0 +1,18 @@
+python -m venv myvenv (Create virtual env.)
+
+
+activate env
+
+pip install django (Install django module in our sys.)
+
+django-admin startproject projectname
+redirect project folder
+
+python manage.py startapp appname 
+python manage.py createsuperuser
+python manage,py makemigrations
+
+python manage,py migrate
+
+python manage,py runserver
+
